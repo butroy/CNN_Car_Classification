@@ -1,27 +1,60 @@
-# CNN based Car Classification
+# Car classification using transfer learning
 
-CNN is widely used in image classification. In this project, we are going to classify car images.
+In this project, I will use Convolutional Neural Network (CNN) to classify 10 different car models. Typically, to tackle this project, large datasets and domain-specific features are needed to best fit the data. However, the [dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html) from stanford has limited data, each car class only has 40 images to train, and each image consists of a car in the foregound against various backgrounds and viewed fom various angles under various illuminations. Thus, the main challenge for this project is unargubly the very fine differences between different classes. Typically to learn these minute differences, a large dataset is needed. However, the hardest task for deep learning is the data itself. Thus, I decided to use out of the box deep learning frameworkd to fine-tune pre-trained classifiers for a specific fine-grained classification test. This method is known as the transfer learning. Besides, due to limited computing resouces (only one 1060 6GB GPU), I decided only train 10 car models to verify the feasibility and effectiveness of the transfer learning. 
 
-## dataset
+## Introduction
+I will use 3 pretrained famous classifiers as the base model of transfer learning. They are vgg19, resnet 50 and InceptionV3. The following plot is the comparison of these three models training on the [imageNet](http://www.image-net.org/) database. 
 
-stanford car dataset from https://ai.stanford.edu/~jkrause/cars/car_dataset.html
+<p align="center">
+  <img width="400" height="400" src="https://github.com/butroy/SF_crime_analysis/blob/master/plots/3.crime_by_time.png">
+</p>
 
-## How to use
 
-download car dataset, prepare the data for the model.
+For these model structures, I didn't include the fully-connected layers at the top of network. Instead, I add a global averaging pooling layer, one 512-perceptron fully connected layer, one 256-perceptron fully connected layer and one 0.3 dropout layer. I also used [Keras](https://keras.io/), a deep learning framework to construct, train, and test the networks.
+ 
+**keras batch normalization bug:**
+However, if you want to replicate my job, there is one thing you need to pay attention to: the BatchNormalization in Keras has a small bug while using transfer learning. "The problem with the current implementation of Keras is that when a BN layer is frozen, it continues to use the mini-batch statistics during training."  As a result, if you fine-tune the top layers, their weights will be adjusted to the mean/variance of the new dataset. Nevertheless, during inference they will receive data which are scaled differently because the mean/variance of the original dataset will be used. [Here](http://blog.datumbox.com/the-batch-normalization-layer-of-keras-is-broken/) is a detailed explanation of the bug itself. To fix this bug:
+```
+pip install -U --force-reinstall --no-dependencies git+https://github.com/datumbox/keras@bugfix/trainable_bn
+```
 
-1. download training image http://imagenet.stanford.edu/internal/car196/cars_train.tgz
-   uncompress to ./data/cars_train
-2. download testing image http://imagenet.stanford.edu/internal/car196/cars_test.tgz
-   uncompress to ./data/cars_test
-3. download devkit https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz
-   uncompress to ./data/devkit
-4. download test annotation with class label http://imagenet.stanford.edu/internal/car196/cars_test_annos_withlabels.mat
-   move it to ./data/devkit
-5. (optional) download bounding box annotations for all images http://imagenet.stanford.edu/internal/car196/cars_annos.mat
-   move it to ./data/devkit
-6. run data_prepare.py to prepare the training and testing data for the model (you may need modify some paths in the file)
+## Experiment
+To test the power of the transfer learning, I compare the models trained under different number of frozen layers. Each framework will be either initialized with trained Imagenet weights or random weights depending on requirements. 
 
-## Training
+Below are several terms:
 
-run ```python train.py -t /path/to/car_dataset/train/ -v /path/to/car_dataset/test/ -m vgg16 -s car196 -e 20 -n 196```
+**Frozen** all layers are untrianable except the custmoized layers I added myself.
+
+**last # layers trainble** last # of layers trainble and these layers include the custmoized layers
+
+**train from scatch** the whole framework is trainable and the initial weights will be randomly assigned.
+
+## Results and discussion
+
+| id   | Framework    | Requirement              | Validation accuracy |
+|------|-------------|--------------------------|---------------------|
+| id1  | vgg19       | frozen                   | 0.593052108         |
+| id2  | vgg19       | last 6 layer trainable   | 0.607940447         |
+| id3  | vgg19       | all layers trainable     | 0.677419356         |
+| id4  | vgg19       | train from scratch       | 0.17369727          |
+| id5  | resnet50    | frozen                   | **0.692307692**     |
+| id6  | resnet50    | last 10 layers trainable | 0.682382134         |
+| id7  | resnet50    | last 40 layers trainable | 0.625310173         |
+| id8  | resnet50    | all layers trainable     | 0.64516129          |
+| id9  | resnet50    | train from scratch       | 0.101736973         |
+| id10 | inceptionV3 | frozen                   | 0.602977668         |
+| id11 | inceptionV3 | last 10 layers trainable | 0.607940448         |
+| id12 | inceptionV3 | last 40 layers trainable | 0.647642679         |
+| id13 | inceptionV3 | all layers trainable     | 0.607940447         |
+| id14 | inceptionV3 | train from scratch       | 0.275434243         |
+
+Most papers about classifications are using top-k accuracy as the metric to measure the performance. However, I only have 10 classes, use top-k accuracy can't demonstrate the effectiveness of the model. Thus, I only focus on right-or-wrong metric to measure.
+
+
+From the table, we could observe that **initialized weights by using trained Imagenet weights is much better than using randomly initialized weights.** vgg19 and InceptionV3 perform very similar, giving validation accuracy about 60%. Resnet50 performs a little better than the other two, achieving accuracy up to 69%. Below is the comparison of each framework individually.
+
+
+vgg19           |  resnet50 |inceptionV3  
+:-------------------------:|:-------------------------:|:-------------------------:
+![](https://github.com/butroy/movie-autoencoder/blob/master/plots/P2_128_128_128_elu.png)  |  ![](https://github.com/butroy/movie-autoencoder/blob/master/plots/P2_64_32_64_elu.png)|![](https://github.com/butroy/movie-autoencoder/blob/master/plots/P2_64_32_64_elu.png)
+
