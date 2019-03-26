@@ -6,7 +6,7 @@ In this project, I will use Convolutional Neural Network (CNN) to classify 10 di
 I will use 3 pretrained famous classifiers as the base model of transfer learning. They are vgg19, resnet 50 and InceptionV3. The following plot is the comparison of these three models training on the [imageNet](http://www.image-net.org/) database. 
 
 <p align="center">
-  <img width="400" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/network%20comparison.png">
+  <img width="600" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/network%20comparison.png">
 </p>
 
 
@@ -51,10 +51,21 @@ Below are several terms:
 Most papers about classifications are using top-k accuracy as the metric to measure the performance. However, I only have 10 classes, use top-k accuracy can't demonstrate the effectiveness of the model. Thus, I only focus on right-or-wrong metric to measure.
 
 
-From the table, we could observe that **initialized weights by using trained Imagenet weights is much better than using randomly initialized weights.** vgg19 and InceptionV3 perform very similar, giving validation accuracy about 60%. Resnet50 performs a little better than the other two, achieving accuracy up to 69%. Below is the comparison of each framework individually.
+From the table, we could observe that **initialized weights by using trained Imagenet weights is much better than using randomly initialized weights.** vgg19 and InceptionV3 perform very similar, giving validation accuracy about 60%. Resnet50 performs a little better than the other two, achieving accuracy up to 69%. Below is the individual comparison of each framework.
 
 
 vgg19           |  resnet50 |inceptionV3  
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](https://github.com/butroy/CNN_Car_Classification/blob/master/plots/vgg19.png)  |  ![](https://github.com/butroy/CNN_Car_Classification/blob/master/plots/resnet50.png)|![](https://github.com/butroy/CNN_Car_Classification/blob/master/plots/inceptionV3.png)
 
+And here is the confusion matrix and the training history of id5
+
+<p align="center">
+  <img width="500" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/id5_cm.png">
+   <img width="500" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/id5_hist.png">
+</p>
+
+
+
+## Conclusion
+Considering the limited source of data, this result is satisfiable and could prove that the transfer learning works well on this car classification task. 
