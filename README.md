@@ -1,9 +1,9 @@
 # Car classification using transfer learning
 
-In this project, I will use Convolutional Neural Network (CNN) to classify 10 different car models. Typically, to tackle this project, large datasets and domain-specific features are needed to best fit the data. However, the [dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html) from stanford has limited data, each car class only has 40 images to train, and each image consists of a car in the foregound against various backgrounds and viewed fom various angles under various illuminations. Thus, the main challenge for this project is unargubly the very fine differences between different classes. Typically to learn these minute differences, a large dataset is needed. However, the hardest task for deep learning is the data itself. Thus, I decided to use out of the box deep learning frameworkd to fine-tune pre-trained classifiers for a specific fine-grained classification test. This method is known as the transfer learning. Besides, due to limited computing resouces (only one 1060 6GB GPU), I decided only train 10 car models to verify the feasibility and effectiveness of the transfer learning. 
+In this project, I will use Convolutional Neural Network (CNN) to classify 10 different car models. Typically, to tackle this project, large datasets and domain-specific features are needed to best fit the data. However, the [dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html) from stanford has limited data, each car class only has 40 images to train, and each image consists of a car in the foregound against various backgrounds and viewed fom various angles under various illuminations. Thus, the main challenge for this project is unargubly the very fine differences between different classes. Typically to learn these minute differences, a large dataset is needed. However, the hardest task for deep learning is the data itself. Thus, I decided to use out of the box deep learning frameworkd to fine-tune pre-trained classifiers for a specific fine-grained classification test. This method is known as the transfer learning. Besides, due to limited computing resouce (only one 1060 6GB GPU), I decided only train 10 car models to verify the feasibility and effectiveness of the transfer learning. 
 
 ## Introduction
-I will use 3 pretrained famous classifiers as the base model of transfer learning. They are vgg19, resnet 50 and InceptionV3. The following plot is the comparison of these three models training on the [imageNet](http://www.image-net.org/) database. 
+I will use 3 pretrained famous classifiers as the base models of transfer learning. They are vgg19, resnet 50 and InceptionV3. The following plot is the comparison of these three models training on the [imageNet](http://www.image-net.org/) database. 
 
 <p align="center">
   <img width="600" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/network%20comparison.png">
@@ -23,11 +23,11 @@ To test the power of the transfer learning, I compare the models trained under d
 
 Below are several terms:
 
-**Frozen** all layers are untrianable except the custmoized layers I added myself.
+**Frozen:** all layers are untrianable except the custmoized layers I added myself.
 
-**last # layers trainble** last # of layers trainble and these layers include the custmoized layers
+**last # layers trainble:** last # of layers trainble and these layers include the custmoized layers
 
-**train from scatch** the whole framework is trainable and the initial weights will be randomly assigned.
+**train from scatch:** the whole framework is trainable and the initial weights will be randomly assigned.
 
 ## Results and discussion
 
@@ -48,7 +48,7 @@ Below are several terms:
 | id13 | inceptionV3 | all layers trainable     | 0.607940447         |
 | id14 | inceptionV3 | train from scratch       | 0.275434243         |
 
-Most papers about classifications are using top-k accuracy as the metric to measure the performance. However, I only have 10 classes, use top-k accuracy can't demonstrate the effectiveness of the model. Thus, I only focus on right-or-wrong metric to measure.
+Most papers about classifications use top-k accuracy as the metric to measure the performance. However, I only have 10 classes, use top-k accuracy can't demonstrate the effectiveness of the model. Thus, I only focus on right-or-wrong metric to measure.
 
 
 From the table, we could observe that **initialized weights by using trained Imagenet weights is much better than using randomly initialized weights.** vgg19 and InceptionV3 perform very similar, giving validation accuracy about 60%. Resnet50 performs a little better than the other two, achieving accuracy up to 69%. Below is the individual comparison of each framework.
@@ -61,11 +61,11 @@ vgg19           |  resnet50 |inceptionV3
 And here is the confusion matrix and the training history of id5
 
 <p align="center">
-  <img width="500" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/id5_cm.png">
-   <img width="500" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/id5_hist.png">
+  <img width="400" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/id5_cm.png">
+   <img width="300" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/id5_hist.png">
 </p>
 
 
 
 ## Conclusion
-Considering the limited source of data, this result is satisfiable and could prove that the transfer learning works well on this car classification task. 
+Considering the limited source of data, this result is satisfiable and could prove that the transfer learning works well on this car classification task. In the end, I also do one full training on the whole car dataset with 196 classes, and reach the top-5 accuracy 78%. For future jobs, we can teset several more CNN models and maybe we could find some other models better fits for the car classificaiton task. 
