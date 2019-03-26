@@ -6,7 +6,7 @@ In this project, I will use Convolutional Neural Network (CNN) to classify 10 di
 I will use 3 pretrained famous classifiers as the base model of transfer learning. They are vgg19, resnet 50 and InceptionV3. The following plot is the comparison of these three models training on the [imageNet](http://www.image-net.org/) database. 
 
 <p align="center">
-  <img width="400" height="400" src="https://github.com/butroy/SF_crime_analysis/blob/master/plots/3.crime_by_time.png">
+  <img width="400" height="400" src="https://github.com/butroy/CNN_Car_Classification/blob/master/plots/network%20comparison.png">
 </p>
 
 
@@ -56,5 +56,5 @@ From the table, we could observe that **initialized weights by using trained Ima
 
 vgg19           |  resnet50 |inceptionV3  
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/butroy/movie-autoencoder/blob/master/plots/P2_128_128_128_elu.png)  |  ![](https://github.com/butroy/movie-autoencoder/blob/master/plots/P2_64_32_64_elu.png)|![](https://github.com/butroy/movie-autoencoder/blob/master/plots/P2_64_32_64_elu.png)
+![](https://github.com/butroy/CNN_Car_Classification/blob/master/plots/vgg19.png)  |  ![](https://github.com/butroy/CNN_Car_Classification/blob/master/plots/resnet50.png)|![](https://github.com/butroy/CNN_Car_Classification/blob/master/plots/inceptionV3.png)
 
